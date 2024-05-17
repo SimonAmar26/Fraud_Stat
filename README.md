@@ -4,6 +4,6 @@ The dataset can be found at: https://www.kaggle.com/datasets/nelgiriyewithana/cr
 
 Steps:
 1. Partie stat (--> EDA, Logistic Regression)
-2. Partie ML (--> Random Forest)
+2. Partie ML (--> Random Forest, ....)
 3. Comparaison
 
