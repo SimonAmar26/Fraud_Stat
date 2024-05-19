@@ -1,0 +1,90 @@
+import pandas as pd
+import numpy as np
+from tqdm import tqdm
+import xgboost as xgb
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Chargement des données
+df = pd.read_csv('/kaggle/input/credit-card-fraud-detection-dataset-2023/creditcard_2023.csv')
+
+# Exploration des données
+print(df.head())
+print(df.info())
+print(df.describe())
+
+# Vérification des valeurs manquantes
+print(df.isnull().sum())
+
+# Séparation des caractéristiques et de la cible
+X = df.drop('Class', axis=1)
+y = df['Class']
+
+# Division des données en ensembles d'entraînement et de test
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42, stratify=y)
+
+# Standardisation des caractéristiques
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# DMatrix pour xgboost
+dtrain = xgb.DMatrix(X_train, label=y_train)
+dtest = xgb.DMatrix(X_test, label=y_test)
+
+# Paramètres du modèle
+params = {
+    'objective': 'binary:logistic',
+    'eval_metric': 'logloss',
+    'learning_rate': 0.1,
+    'max_depth': 3,
+    'random_state': 42
+}
+
+# Callback personnalisé pour afficher la progression
+class TqdmCallback(xgb.callback.TrainingCallback):
+    def __init__(self, total):
+        self.pbar = tqdm(total=total, desc='Training XGBoost', ncols=100)
+    
+    def after_iteration(self, model, epoch, evals_log):
+        self.pbar.update(1)
+        return False
+    
+    def __del__(self):
+        self.pbar.close()
+
+# Nombre de rounds de boosting
+num_boost_round = 100
+evals = [(dtrain, 'train'), (dtest, 'eval')]
+
+# Entraînement du modèle avec le callback
+bst = xgb.train(params, dtrain, num_boost_round, evals=evals, callbacks=[TqdmCallback(num_boost_round)])
+
+# Prédictions sur l'ensemble de test
+y_pred_proba = bst.predict(dtest)
+y_pred = (y_pred_proba > 0.5).astype(int)
+
+# Évaluation du modèle
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
+roc_auc = roc_auc_score(y_test, y_pred_proba)
+
+print(f'Accuracy: {accuracy:.2f}')
+print(f'Precision: {precision:.2f}')
+print(f'Recall: {recall:.2f}')
+print(f'F1 Score: {f1:.2f}')
+print(f'ROC AUC Score: {roc_auc:.2f}')
+
+# Matrice de confusion
+conf_matrix = confusion_matrix(y_test, y_pred)
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt="d", cmap="Blues", xticklabels=['Non-Fraud', 'Fraud'], yticklabels=['Non-Fraud', 'Fraud'])
+plt.xlabel('Predicted Label')
+plt.ylabel('True Label')
+plt.title('Confusion Matrix')
+plt.show()
