@@ -1,0 +1,92 @@
+''' FRAUD DETECTION '''
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import seaborn as sns
+
+
+'''
+
+Exploratory Data Analysis
+
+0. Extract the data, format to dataframe
+
+1. Some metrics
+2. Test for normality on the different variables
+3. Correlation matrix / Covariance matrix
+4. Principal Component Analysis
+
+'''
+
+# We import the csv file as a pandas DataFrame 
+
+df = pd.read_csv("creditcard_2023.csv")
+print(df.head())
+print(df.tail())
+
+print(df['Class'].value_counts())         # the dataset is balanced between fraud cases and non-fraud cases
+
+# Some metrics ------------------------------------------------------------------------------------------------------------------------
+
+# we use the descirbe method to display some information about the variables
+# however, because all the variables are anonymized, nothing salient shows up in the dataset.
+print(df.describe())
+
+# Now for a more visual representation, let's plot the boxplot of the anonymized variables
+anonymized_var = df.loc[:, 'V1':'V28']
+plt.boxplot(anonymized_var, vert=False)
+plt.show()
+
+# Test for normality -------------------------------------------------------------------------------------------------------------------
+
+# Let's see with a simple histogram if some variables seem to follow a gaussian distribution
+for i in range(1):
+    plt.hist(anonymized_var.iloc[:,i], bins=50)
+    plt.legend()
+    plt.savefig(f"V{str(i+1)}_hist.png")
+    plt.show()
+
+
+# Now for better precision, let's use qqplots. We'll use methods from statsmodels.api
+for i in range(1):
+    measurements = anonymized_var.iloc[:,i]
+    title = 'qqplot_V' + str(i+1) + '.jpg'
+
+    # compare with the theoretical N(0,1) quantile and a regression line is fit
+    fig = sm.qqplot(np.array(measurements), line='r') 
+    plt.title(title)
+    plt.savefig(title)
+    plt.show()
+
+
+# Correlation & covariance --------------------------------------------------------------------------------------------------------------
+
+# Correlation Map --> see correlation between all 28 variables
+
+df = df.loc[:, 'V1':'Class']
+
+f, ax = plt.subplots(figsize = (18,18))
+sns.heatmap(df.corr(), annot= True, linewidths=0.7, fmt = ".1f", ax=ax)
+plt.xticks(rotation=45)
+plt.yticks(rotation=0)
+plt.title('Correlation Map', fontsize=20)
+plt.savefig('correlation_map.png')
+plt.show()
+
+# Spearman correlation map (better for non-linear relationships, deals better with outliers)
+
+spearman_corr = df.corr(method="spearman")
+
+f, ax = plt.subplots(figsize=(18, 18))
+sns.heatmap(spearman_corr, annot=True, linewidths=0.7, fmt=".1f", ax=ax)
+plt.xticks(rotation=45)
+plt.yticks(rotation=0)
+plt.title("Spearman's Correlation Map", fontsize=20)
+plt.savefig('spearman_correlation_map.png')
+plt.show()
+
+# Principal Component Analysis -------------------------------------------------------------------------------------------------------------
+
+# [to be continued]
