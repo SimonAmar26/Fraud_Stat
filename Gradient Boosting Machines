@@ -88,3 +88,307 @@ plt.xlabel('Predicted Label')
 plt.ylabel('True Label')
 plt.title('Confusion Matrix')
 plt.show()
+
+---------------------------------------------------------------------------------------------------------------------------------------
+   id        V1        V2        V3        V4        V5        V6        V7  \
+0   0 -0.260648 -0.469648  2.496266 -0.083724  0.129681  0.732898  0.519014   
+1   1  0.985100 -0.356045  0.558056 -0.429654  0.277140  0.428605  0.406466   
+2   2 -0.260272 -0.949385  1.728538 -0.457986  0.074062  1.419481  0.743511   
+3   3 -0.152152 -0.508959  1.746840 -1.090178  0.249486  1.143312  0.518269   
+4   4 -0.206820 -0.165280  1.527053 -0.448293  0.106125  0.530549  0.658849   
+
+         V8        V9  ...       V21       V22       V23       V24       V25  \
+0 -0.130006  0.727159  ... -0.110552  0.217606 -0.134794  0.165959  0.126280   
+1 -0.133118  0.347452  ... -0.194936 -0.605761  0.079469 -0.577395  0.190090   
+2 -0.095576 -0.261297  ... -0.005020  0.702906  0.945045 -1.154666 -0.605564   
+3 -0.065130 -0.205698  ... -0.146927 -0.038212 -0.214048 -1.893131  1.003963   
+4 -0.212660  1.049921  ... -0.106984  0.729727 -0.161666  0.312561 -0.414116   
+
+        V26       V27       V28    Amount  Class  
+0 -0.434824 -0.081230 -0.151045  17982.10      0  
+1  0.296503 -0.248052 -0.064512   6531.37      0  
+2 -0.312895 -0.300258 -0.244718   2513.54      0  
+3 -0.515950 -0.165316  0.048424   5384.44      0  
+4  1.071126  0.023712  0.419117  14278.97      0  
+
+[5 rows x 31 columns]
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 568630 entries, 0 to 568629
+Data columns (total 31 columns):
+ #   Column  Non-Null Count   Dtype  
+---  ------  --------------   -----  
+ 0   id      568630 non-null  int64  
+ 1   V1      568630 non-null  float64
+ 2   V2      568630 non-null  float64
+ 3   V3      568630 non-null  float64
+ 4   V4      568630 non-null  float64
+ 5   V5      568630 non-null  float64
+ 6   V6      568630 non-null  float64
+ 7   V7      568630 non-null  float64
+ 8   V8      568630 non-null  float64
+ 9   V9      568630 non-null  float64
+ 10  V10     568630 non-null  float64
+ 11  V11     568630 non-null  float64
+ 12  V12     568630 non-null  float64
+ 13  V13     568630 non-null  float64
+ 14  V14     568630 non-null  float64
+ 15  V15     568630 non-null  float64
+ 16  V16     568630 non-null  float64
+ 17  V17     568630 non-null  float64
+ 18  V18     568630 non-null  float64
+ 19  V19     568630 non-null  float64
+ 20  V20     568630 non-null  float64
+ 21  V21     568630 non-null  float64
+ 22  V22     568630 non-null  float64
+ 23  V23     568630 non-null  float64
+ 24  V24     568630 non-null  float64
+ 25  V25     568630 non-null  float64
+ 26  V26     568630 non-null  float64
+ 27  V27     568630 non-null  float64
+ 28  V28     568630 non-null  float64
+ 29  Amount  568630 non-null  float64
+ 30  Class   568630 non-null  int64  
+dtypes: float64(29), int64(2)
+memory usage: 134.5 MB
+None
+                  id            V1            V2            V3            V4  \
+count  568630.000000  5.686300e+05  5.686300e+05  5.686300e+05  5.686300e+05   
+mean   284314.500000 -5.638058e-17 -1.319545e-16 -3.518788e-17 -2.879008e-17   
+std    164149.486122  1.000001e+00  1.000001e+00  1.000001e+00  1.000001e+00   
+min         0.000000 -3.495584e+00 -4.996657e+01 -3.183760e+00 -4.951222e+00   
+25%    142157.250000 -5.652859e-01 -4.866777e-01 -6.492987e-01 -6.560203e-01   
+50%    284314.500000 -9.363846e-02 -1.358939e-01  3.528579e-04 -7.376152e-02   
+75%    426471.750000  8.326582e-01  3.435552e-01  6.285380e-01  7.070047e-01   
+max    568629.000000  2.229046e+00  4.361865e+00  1.412583e+01  3.201536e+00   
+
+                 V5            V6            V7            V8            V9  \
+count  5.686300e+05  5.686300e+05  5.686300e+05  5.686300e+05  5.686300e+05   
+mean   7.997245e-18 -3.958636e-17 -3.198898e-17  2.109273e-17  3.998623e-17   
+std    1.000001e+00  1.000001e+00  1.000001e+00  1.000001e+00  1.000001e+00   
+min   -9.952786e+00 -2.111111e+01 -4.351839e+00 -1.075634e+01 -3.751919e+00   
+25%   -2.934955e-01 -4.458712e-01 -2.835329e-01 -1.922572e-01 -5.687446e-01   
+50%    8.108788e-02  7.871758e-02  2.333659e-01 -1.145242e-01  9.252647e-02   
+75%    4.397368e-01  4.977881e-01  5.259548e-01  4.729905e-02  5.592621e-01   
+max    4.271689e+01  2.616840e+01  2.178730e+02  5.958040e+00  2.027006e+01   
+
+       ...           V21           V22           V23           V24  \
+count  ...  5.686300e+05  5.686300e+05  5.686300e+05  5.686300e+05   
+mean   ...  4.758361e-17  3.948640e-18  6.194741e-18 -2.799036e-18   
+std    ...  1.000001e+00  1.000001e+00  1.000001e+00  1.000001e+00   
+min    ... -1.938252e+01 -7.734798e+00 -3.029545e+01 -4.067968e+00   
+25%    ... -1.664408e-01 -4.904892e-01 -2.376289e-01 -6.515801e-01   
+50%    ... -3.743065e-02 -2.732881e-02 -5.968903e-02  1.590123e-02   
+75%    ...  1.479787e-01  4.638817e-01  1.557153e-01  7.007374e-01   
+max    ...  8.087080e+00  1.263251e+01  3.170763e+01  1.296564e+01   
+
+                V25           V26           V27           V28         Amount  \
+count  5.686300e+05  5.686300e+05  5.686300e+05  5.686300e+05  568630.000000   
+mean  -3.178905e-17 -7.497417e-18 -3.598760e-17  2.609101e-17   12041.957635   
+std    1.000001e+00  1.000001e+00  1.000001e+00  1.000001e+00    6919.644449   
+min   -1.361263e+01 -8.226969e+00 -1.049863e+01 -3.903524e+01      50.010000   
+25%   -5.541485e-01 -6.318948e-01 -3.049607e-01 -2.318783e-01    6054.892500   
+50%   -8.193162e-03 -1.189208e-02 -1.729111e-01 -1.392973e-02   12030.150000   
+75%    5.500147e-01  6.728879e-01  3.340230e-01  4.095903e-01   18036.330000   
+max    1.462151e+01  5.623285e+00  1.132311e+02  7.725594e+01   24039.930000   
+
+          Class  
+count  568630.0  
+mean        0.5  
+std         0.5  
+min         0.0  
+25%         0.0  
+50%         0.5  
+75%         1.0  
+max         1.0  
+
+[8 rows x 31 columns]
+id        0
+V1        0
+V2        0
+V3        0
+V4        0
+V5        0
+V6        0
+V7        0
+V8        0
+V9        0
+V10       0
+V11       0
+V12       0
+V13       0
+V14       0
+V15       0
+V16       0
+V17       0
+V18       0
+V19       0
+V20       0
+V21       0
+V22       0
+V23       0
+V24       0
+V25       0
+V26       0
+V27       0
+V28       0
+Amount    0
+Class     0
+dtype: int64
+
+Training XGBoost:   0%|                                                     | 0/100 [00:00<?, ?it/s]
+[0]	train-logloss:0.59845	eval-logloss:0.59846
+Training XGBoost:   1%|▍                                            | 1/100 [00:00<01:33,  1.05it/s]
+[1]	train-logloss:0.52080	eval-logloss:0.52080
+[2]	train-logloss:0.45605	eval-logloss:0.45606
+Training XGBoost:   3%|█▎                                           | 3/100 [00:01<00:28,  3.35it/s]
+[3]	train-logloss:0.40132	eval-logloss:0.40132
+[4]	train-logloss:0.35457	eval-logloss:0.35457
+Training XGBoost:   5%|██▎                                          | 5/100 [00:01<00:17,  5.48it/s]
+[5]	train-logloss:0.31429	eval-logloss:0.31429
+[6]	train-logloss:0.27936	eval-logloss:0.27937
+Training XGBoost:   7%|███▏                                         | 7/100 [00:01<00:12,  7.28it/s]
+[7]	train-logloss:0.24889	eval-logloss:0.24890
+[8]	train-logloss:0.22219	eval-logloss:0.22220
+Training XGBoost:   9%|████                                         | 9/100 [00:01<00:10,  8.76it/s]
+[9]	train-logloss:0.19870	eval-logloss:0.19872
+[10]	train-logloss:0.17795	eval-logloss:0.17796
+Training XGBoost:  11%|████▊                                       | 11/100 [00:01<00:09,  9.88it/s]
+[11]	train-logloss:0.15958	eval-logloss:0.15959
+[12]	train-logloss:0.14328	eval-logloss:0.14329
+Training XGBoost:  13%|█████▋                                      | 13/100 [00:01<00:08, 10.86it/s]
+[13]	train-logloss:0.12878	eval-logloss:0.12879
+[14]	train-logloss:0.11586	eval-logloss:0.11587
+Training XGBoost:  15%|██████▌                                     | 15/100 [00:01<00:07, 11.60it/s]
+[15]	train-logloss:0.10432	eval-logloss:0.10434
+[16]	train-logloss:0.09401	eval-logloss:0.09403
+Training XGBoost:  17%|███████▍                                    | 17/100 [00:02<00:06, 12.15it/s]
+[17]	train-logloss:0.08479	eval-logloss:0.08479
+[18]	train-logloss:0.07652	eval-logloss:0.07652
+Training XGBoost:  19%|████████▎                                   | 19/100 [00:02<00:06, 12.55it/s]
+[19]	train-logloss:0.06910	eval-logloss:0.06911
+[20]	train-logloss:0.06245	eval-logloss:0.06245
+Training XGBoost:  21%|█████████▏                                  | 21/100 [00:02<00:06, 12.81it/s]
+[21]	train-logloss:0.05647	eval-logloss:0.05646
+[22]	train-logloss:0.05109	eval-logloss:0.05109
+Training XGBoost:  23%|██████████                                  | 23/100 [00:02<00:05, 13.00it/s]
+[23]	train-logloss:0.04625	eval-logloss:0.04625
+[24]	train-logloss:0.04190	eval-logloss:0.04189
+Training XGBoost:  25%|███████████                                 | 25/100 [00:02<00:05, 13.08it/s]
+[25]	train-logloss:0.03798	eval-logloss:0.03797
+[26]	train-logloss:0.03445	eval-logloss:0.03443
+Training XGBoost:  27%|███████████▉                                | 27/100 [00:02<00:05, 13.26it/s]
+[27]	train-logloss:0.03126	eval-logloss:0.03124
+[28]	train-logloss:0.02839	eval-logloss:0.02837
+Training XGBoost:  29%|████████████▊                               | 29/100 [00:03<00:05, 13.33it/s]
+[29]	train-logloss:0.02581	eval-logloss:0.02578
+[30]	train-logloss:0.02347	eval-logloss:0.02345
+Training XGBoost:  31%|█████████████▋                              | 31/100 [00:03<00:05, 13.39it/s]
+[31]	train-logloss:0.02137	eval-logloss:0.02133
+[32]	train-logloss:0.01946	eval-logloss:0.01943
+Training XGBoost:  33%|██████████████▌                             | 33/100 [00:03<00:04, 13.47it/s]
+[33]	train-logloss:0.01775	eval-logloss:0.01771
+[34]	train-logloss:0.01620	eval-logloss:0.01616
+Training XGBoost:  35%|███████████████▍                            | 35/100 [00:03<00:04, 13.50it/s]
+[35]	train-logloss:0.01480	eval-logloss:0.01476
+[36]	train-logloss:0.01354	eval-logloss:0.01349
+Training XGBoost:  37%|████████████████▎                           | 37/100 [00:03<00:04, 13.48it/s]
+[37]	train-logloss:0.01240	eval-logloss:0.01235
+[38]	train-logloss:0.01136	eval-logloss:0.01132
+Training XGBoost:  39%|█████████████████▏                          | 39/100 [00:03<00:04, 13.45it/s]
+[39]	train-logloss:0.01043	eval-logloss:0.01038
+[40]	train-logloss:0.00959	eval-logloss:0.00954
+Training XGBoost:  41%|██████████████████                          | 41/100 [00:03<00:04, 13.44it/s]
+[41]	train-logloss:0.00883	eval-logloss:0.00878
+[42]	train-logloss:0.00815	eval-logloss:0.00809
+Training XGBoost:  43%|██████████████████▉                         | 43/100 [00:04<00:04, 13.46it/s]
+[43]	train-logloss:0.00753	eval-logloss:0.00747
+[44]	train-logloss:0.00697	eval-logloss:0.00691
+Training XGBoost:  45%|███████████████████▊                        | 45/100 [00:04<00:04, 13.43it/s]
+[45]	train-logloss:0.00646	eval-logloss:0.00640
+[46]	train-logloss:0.00600	eval-logloss:0.00593
+Training XGBoost:  47%|████████████████████▋                       | 47/100 [00:04<00:03, 13.41it/s]
+[47]	train-logloss:0.00559	eval-logloss:0.00552
+[48]	train-logloss:0.00522	eval-logloss:0.00514
+Training XGBoost:  49%|█████████████████████▌                      | 49/100 [00:04<00:04, 12.41it/s]
+[49]	train-logloss:0.00489	eval-logloss:0.00481
+[50]	train-logloss:0.00458	eval-logloss:0.00451
+Training XGBoost:  51%|██████████████████████▍                     | 51/100 [00:04<00:03, 12.70it/s]
+[51]	train-logloss:0.00431	eval-logloss:0.00423
+[52]	train-logloss:0.00405	eval-logloss:0.00398
+Training XGBoost:  53%|███████████████████████▎                    | 53/100 [00:04<00:03, 13.05it/s]
+[53]	train-logloss:0.00383	eval-logloss:0.00376
+[54]	train-logloss:0.00363	eval-logloss:0.00356
+Training XGBoost:  55%|████████████████████████▏                   | 55/100 [00:04<00:03, 13.19it/s]
+[55]	train-logloss:0.00345	eval-logloss:0.00339
+[56]	train-logloss:0.00328	eval-logloss:0.00321
+Training XGBoost:  57%|█████████████████████████                   | 57/100 [00:05<00:03, 13.46it/s]
+[57]	train-logloss:0.00312	eval-logloss:0.00305
+[58]	train-logloss:0.00299	eval-logloss:0.00293
+Training XGBoost:  59%|█████████████████████████▉                  | 59/100 [00:05<00:03, 13.62it/s]
+[59]	train-logloss:0.00286	eval-logloss:0.00280
+[60]	train-logloss:0.00275	eval-logloss:0.00268
+Training XGBoost:  61%|██████████████████████████▊                 | 61/100 [00:05<00:02, 13.57it/s]
+[61]	train-logloss:0.00265	eval-logloss:0.00258
+[62]	train-logloss:0.00255	eval-logloss:0.00248
+Training XGBoost:  63%|███████████████████████████▋                | 63/100 [00:05<00:02, 13.44it/s]
+[63]	train-logloss:0.00247	eval-logloss:0.00239
+[64]	train-logloss:0.00239	eval-logloss:0.00231
+Training XGBoost:  65%|████████████████████████████▌               | 65/100 [00:05<00:02, 13.52it/s]
+[65]	train-logloss:0.00232	eval-logloss:0.00224
+[66]	train-logloss:0.00225	eval-logloss:0.00218
+Training XGBoost:  67%|█████████████████████████████▍              | 67/100 [00:05<00:02, 13.47it/s]
+[67]	train-logloss:0.00220	eval-logloss:0.00212
+[68]	train-logloss:0.00214	eval-logloss:0.00207
+Training XGBoost:  69%|██████████████████████████████▎             | 69/100 [00:06<00:02, 13.09it/s]
+[69]	train-logloss:0.00209	eval-logloss:0.00203
+[70]	train-logloss:0.00204	eval-logloss:0.00199
+Training XGBoost:  71%|███████████████████████████████▏            | 71/100 [00:06<00:02, 13.36it/s]
+[71]	train-logloss:0.00200	eval-logloss:0.00195
+[72]	train-logloss:0.00197	eval-logloss:0.00191
+Training XGBoost:  73%|████████████████████████████████            | 73/100 [00:06<00:02, 12.94it/s]
+[73]	train-logloss:0.00193	eval-logloss:0.00188
+[74]	train-logloss:0.00190	eval-logloss:0.00186
+Training XGBoost:  75%|█████████████████████████████████           | 75/100 [00:06<00:02, 11.84it/s]
+[75]	train-logloss:0.00187	eval-logloss:0.00184
+[76]	train-logloss:0.00184	eval-logloss:0.00180
+Training XGBoost:  77%|█████████████████████████████████▉          | 77/100 [00:06<00:01, 12.34it/s]
+[77]	train-logloss:0.00181	eval-logloss:0.00178
+[78]	train-logloss:0.00179	eval-logloss:0.00177
+Training XGBoost:  79%|██████████████████████████████████▊         | 79/100 [00:06<00:01, 12.48it/s]
+[79]	train-logloss:0.00177	eval-logloss:0.00175
+[80]	train-logloss:0.00175	eval-logloss:0.00174
+Training XGBoost:  81%|███████████████████████████████████▋        | 81/100 [00:07<00:01, 12.62it/s]
+[81]	train-logloss:0.00173	eval-logloss:0.00172
+[82]	train-logloss:0.00171	eval-logloss:0.00171
+Training XGBoost:  83%|████████████████████████████████████▌       | 83/100 [00:07<00:01, 12.85it/s]
+[83]	train-logloss:0.00170	eval-logloss:0.00170
+[84]	train-logloss:0.00168	eval-logloss:0.00169
+Training XGBoost:  85%|█████████████████████████████████████▍      | 85/100 [00:07<00:01, 12.91it/s]
+[85]	train-logloss:0.00166	eval-logloss:0.00167
+[86]	train-logloss:0.00165	eval-logloss:0.00167
+Training XGBoost:  87%|██████████████████████████████████████▎     | 87/100 [00:07<00:01, 12.86it/s]
+[87]	train-logloss:0.00163	eval-logloss:0.00165
+[88]	train-logloss:0.00161	eval-logloss:0.00163
+Training XGBoost:  89%|███████████████████████████████████████▏    | 89/100 [00:07<00:00, 12.84it/s]
+[89]	train-logloss:0.00158	eval-logloss:0.00162
+[90]	train-logloss:0.00157	eval-logloss:0.00161
+Training XGBoost:  91%|████████████████████████████████████████    | 91/100 [00:07<00:00, 13.09it/s]
+[91]	train-logloss:0.00156	eval-logloss:0.00160
+[92]	train-logloss:0.00155	eval-logloss:0.00160
+Training XGBoost:  93%|████████████████████████████████████████▉   | 93/100 [00:07<00:00, 13.23it/s]
+[93]	train-logloss:0.00154	eval-logloss:0.00159
+[94]	train-logloss:0.00153	eval-logloss:0.00159
+Training XGBoost:  95%|█████████████████████████████████████████▊  | 95/100 [00:08<00:00, 13.49it/s]
+[95]	train-logloss:0.00151	eval-logloss:0.00157
+[96]	train-logloss:0.00150	eval-logloss:0.00156
+Training XGBoost:  97%|██████████████████████████████████████████▋ | 97/100 [00:08<00:00, 13.26it/s]
+[97]	train-logloss:0.00148	eval-logloss:0.00155
+[98]	train-logloss:0.00147	eval-logloss:0.00155
+Training XGBoost:  99%|███████████████████████████████████████████▌| 99/100 [00:08<00:00, 13.17it/s]
+[99]	train-logloss:0.00146	eval-logloss:0.00154
+Training XGBoost: 100%|███████████████████████████████████████████| 100/100 [00:08<00:00, 11.83it/s]
+Accuracy: 1.00
+Precision: 1.00
+Recall: 1.00
+F1 Score: 1.00
+ROC AUC Score: 1.00
