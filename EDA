@@ -5,20 +5,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 import seaborn as sns
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 
 '''
 
 Exploratory Data Analysis
 
-0. Extract the data, format to dataframe
-
+0. Extract the data, format to DataFrame
 1. Some metrics
 2. Test for normality on the different variables
 3. Correlation matrix / Covariance matrix
 4. Principal Component Analysis
 
 '''
+
 
 # We import the csv file as a pandas DataFrame 
 
@@ -37,6 +39,14 @@ print(df.describe())
 # Now for a more visual representation, let's plot the boxplot of the anonymized variables
 anonymized_var = df.loc[:, 'V1':'V28']
 plt.boxplot(anonymized_var, vert=False)
+plt.savefig('boxplot_anonymized_variables.jpg')
+plt.show()
+
+# From the previous boxplot, we saw that there were some outliers which prevented us from having a more precise vision
+
+av_no_outliers = anonymized_var[(anonymized_var >= -50).all(axis=1) & (anonymized_var <= 50).all(axis=1)]
+plt.boxplot(av_no_outliers, vert=False)
+plt.savefig('boxplot_anonymized_variables_no_outliers.jpg')
 plt.show()
 
 # Test for normality -------------------------------------------------------------------------------------------------------------------
@@ -75,6 +85,21 @@ plt.title('Correlation Map', fontsize=20)
 plt.savefig('correlation_map.png')
 plt.show()
 
+# Let's have a closer look at the correlated values
+
+print("Let's have a closer look at which variables are highly correlated")
+
+x = df.corr().values
+rows, cols = df.shape
+flds = list(df.columns)
+for i in range(cols):
+    for j in range(i+1, cols):
+        try:
+            if x[i,j] > 0.6 or x[i,j] < 0.6:
+                print (flds[i], ' ', flds[j], ' ', x[i,j])
+        except:
+            continue
+
 # Spearman correlation map (better for non-linear relationships, deals better with outliers)
 
 spearman_corr = df.corr(method="spearman")
@@ -87,6 +112,30 @@ plt.title("Spearman's Correlation Map", fontsize=20)
 plt.savefig('spearman_correlation_map.png')
 plt.show()
 
+
 # Principal Component Analysis -------------------------------------------------------------------------------------------------------------
 
-# [to be continued]
+
+scaler = StandardScaler()      # why standard scaler?
+scaler.fit(df)
+
+scaled_data = scaler.transform(df)
+
+pca = PCA(n_components=2)     # change from 30 to 2 dimensions by changing the vector space
+pca.fit(scaled_data)
+
+x_pca = pca.transform(scaled_data)
+
+print(f"shape of scaled data:{scaled_data.shape}")
+print(f"shape of x_pca:{x_pca.shape}")
+
+print(f"here is the x_pca:\n {x_pca}")
+
+# Plot
+
+plt.figure(figsize=(8, 6))
+plt.scatter(x_pca[:, 0], x_pca[:, 1], c=df['Class'])
+plt.xlabel('First Principal Component')
+plt.ylabel('Second Principal Component')
+plt.savefig('PCA_dim2.jpg')
+plt.show()
