@@ -1,0 +1,129 @@
+import pandas as pd
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras import layers, models
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import f1_score, roc_auc_score, confusion_matrix, classification_report
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Charger les données
+df = pd.read_csv('/kaggle/input/credit-card-fraud-detection-dataset-2023/creditcard_2023.csv')
+
+# Séparer les caractéristiques (features) et les étiquettes (labels)
+X = df.drop('Class', axis=1)
+y = df['Class']
+
+# Séparation des ensembles d'entraînement, de validation et de test
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+# Normalisation des données
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_val = scaler.transform(X_val)
+X_test = scaler.transform(X_test)
+
+# Remodeler les données pour qu'elles correspondent au format d'entrée attendu par le CNN (3D tensor)
+X_train = np.reshape(X_train, (X_train.shape[0], X_train.shape[1], 1))
+X_val = np.reshape(X_val, (X_val.shape[0], X_val.shape[1], 1))
+X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1))
+
+# Définition de l'architecture du CNN
+def Fraud_CNN(input_shape):
+    model = models.Sequential()
+    
+    # Couche d'entrée
+    model.add(layers.Input(shape=input_shape))
+    
+    # Première couche de convolution
+    model.add(layers.Conv1D(32, 3, activation='relu'))
+    model.add(layers.MaxPooling1D(2))
+    
+    # Deuxième couche de convolution
+    model.add(layers.Conv1D(64, 3, activation='relu'))
+    model.add(layers.MaxPooling1D(2))
+    
+    # Troisième couche de convolution
+    model.add(layers.Conv1D(128, 3, activation='relu'))
+    model.add(layers.MaxPooling1D(2))
+    
+    # Couche de "flatten"
+    model.add(layers.Flatten())
+    
+    # Couche fully connected
+    model.add(layers.Dense(128, activation='relu'))
+    
+    # Couche de sortie
+    model.add(layers.Dense(1, activation='sigmoid'))  # Utilisation de sigmoid pour une classification binaire
+    
+    return model
+
+# Construction du modèle
+input_shape = (X_train.shape[1], 1)  # La longueur de la séquence correspond à la dimension des caractéristiques
+model = Fraud_CNN(input_shape)
+
+# Compilation du modèle
+model.compile(optimizer='adam',
+              loss='binary_crossentropy',  # Problème de classification binaire
+              metrics=['accuracy'])
+
+# Entraînement du modèle
+history = model.fit(X_train, y_train, epochs=5, batch_size=64, validation_data=(X_val, y_val))
+
+# Évaluation du modèle
+loss, accuracy = model.evaluate(X_test, y_test)
+print("Test Accuracy:", accuracy)
+
+# Prédictions sur l'ensemble de test
+y_pred_prob = model.predict(X_test)
+y_pred = (y_pred_prob > 0.5).astype(int)
+
+# Calcul des métriques
+f1 = f1_score(y_test, y_pred)
+roc_auc = roc_auc_score(y_test, y_pred_prob)
+
+print("F1 Score:", f1)
+print("ROC AUC Score:", roc_auc)
+
+# Matrice de confusion
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+# Affichage de la matrice de confusion
+plt.figure(figsize=(8, 6))
+sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=['Non-Fraud', 'Fraud'], yticklabels=['Non-Fraud', 'Fraud'])
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix')
+plt.show()
+
+# Rapport de classification détaillé
+print(classification_report(y_test, y_pred, target_names=['Non-Fraud', 'Fraud']))
+
+------------------------------------------------------------------------------------
+
+Epoch 1/5
+6220/6220 ━━━━━━━━━━━━━━━━━━━━ 45s 7ms/step - accuracy: 0.9895 - loss: 0.0327 - val_accuracy: 0.9977 - val_loss: 0.0106
+Epoch 2/5
+6220/6220 ━━━━━━━━━━━━━━━━━━━━ 42s 7ms/step - accuracy: 0.9988 - loss: 0.0046 - val_accuracy: 0.9994 - val_loss: 0.0038
+Epoch 3/5
+6220/6220 ━━━━━━━━━━━━━━━━━━━━ 44s 7ms/step - accuracy: 0.9992 - loss: 0.0031 - val_accuracy: 0.9994 - val_loss: 0.0024
+Epoch 4/5
+6220/6220 ━━━━━━━━━━━━━━━━━━━━ 82s 7ms/step - accuracy: 0.9994 - loss: 0.0021 - val_accuracy: 0.9995 - val_loss: 0.0022
+Epoch 5/5
+6220/6220 ━━━━━━━━━━━━━━━━━━━━ 45s 7ms/step - accuracy: 0.9994 - loss: 0.0020 - val_accuracy: 0.9996 - val_loss: 0.0016
+2666/2666 ━━━━━━━━━━━━━━━━━━━━ 5s 2ms/step - accuracy: 0.9997 - loss: 0.0018
+Test Accuracy: 0.9996717572212219
+2666/2666 ━━━━━━━━━━━━━━━━━━━━ 5s 2ms/step
+F1 Score: 0.9996731492073868
+ROC AUC Score: 0.999989896224602
+
+                 precision    recall  f1-score   support
+
+   Non-Fraud       1.00      1.00      1.00     42464
+       Fraud       1.00      1.00      1.00     42831
+
+    accuracy                           1.00     85295
+   macro avg       1.00      1.00      1.00     85295
+weighted avg       1.00      1.00      1.00     85295
