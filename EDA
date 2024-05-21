@@ -132,10 +132,64 @@ print(f"shape of x_pca:{x_pca.shape}")
 print(f"here is the x_pca:\n {x_pca}")
 
 # Plot
+principal_components = pca.components_
 
 plt.figure(figsize=(8, 6))
-plt.scatter(x_pca[:, 0], x_pca[:, 1], c=df['Class'])
+plt.scatter(x_pca[:, 0], x_pca[:, 1], c=df['Class'], s=15, alpha=0.2)    
+
+origin = np.zeros((2, 2))
+plt.quiver(*origin, principal_components[:, 0], principal_components[:, 1], color=['r', 'b'], scale=3)
+
 plt.xlabel('First Principal Component')
 plt.ylabel('Second Principal Component')
-plt.savefig('PCA_dim2.jpg')
+plt.title('PCA with Principal Component Vectors')
+plt.savefig('PCA_dim2_w_vec.jpg')
 plt.show()
+
+# --------------------------------- PCA (3 components)
+
+
+# Separate features and target
+X = df.drop(columns=['Class'])
+y = df['Class']
+
+# Standardize the features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Perform PCA
+pca = PCA(n_components=3)
+X_pca = pca.fit_transform(X_scaled)
+
+# Explained variance ratio
+ex_variance = np.var(X_pca, axis=0)
+ex_variance_ratio = ex_variance / np.sum(ex_variance)
+print(f'Explained variance ratio: {ex_variance_ratio}')
+
+# Prepare data for plotting
+Xax = X_pca[:, 0]
+Yax = X_pca[:, 1]
+Zax = X_pca[:, 2]
+
+cdict = {0: 'red', 1: 'green'}
+labl = {0: 'Normal', 1: 'Fraudulent'}
+marker = {0: '*', 1: 'o'}
+alpha = {0: 0.3, 1: 0.5}
+
+# Plot
+fig = plt.figure(figsize=(7, 5))
+ax = fig.add_subplot(111, projection='3d')
+
+fig.patch.set_facecolor('white')
+for l in np.unique(y):
+    ix = np.where(y == l)
+    ax.scatter(Xax[ix], Yax[ix], Zax[ix], c=cdict[l], s=40, label=labl[l], marker=marker[l], alpha=alpha[l])
+
+ax.set_xlabel("First PC", fontsize=14)
+ax.set_ylabel("Second PC", fontsize=14)
+ax.set_zlabel("Third PC", fontsize=14)
+ax.legend()
+
+plt.savefig('PCA_dim3.jpg')
+plt.show()
+
