@@ -1,5 +1,3 @@
-''' FRAUD DETECTION '''
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -41,7 +39,7 @@ print(df.info())
 # Display summary statistics for each column
 print(df.describe())
 
-# Extract the anonymized variables (V1 to V28) for further analysis
+# Extract the anonymized variables (V1 to V28) for further analysis. Because we are analyzing individual features here, it does not seem pertinent to analyze the id's, the amount or the class of each transaction.
 anonymized_var = df.loc[:, 'V1':'V28']
 
 # Plot boxplots for the anonymized variables to visualize their distributions and identify outliers
@@ -49,7 +47,7 @@ plt.boxplot(anonymized_var, vert=False)
 plt.savefig('boxplot_anonymized_variables.jpg')
 plt.show()
 
-# Remove extreme outliers for a clearer view of the data
+# Remove extreme outliers for a clearer view of the data. We determine the outliers based on the previous plot. 
 av_no_outliers = anonymized_var[(anonymized_var >= -50).all(axis=1) & (anonymized_var <= 50).all(axis=1)]
 plt.boxplot(av_no_outliers, vert=False)
 plt.savefig('boxplot_anonymized_variables_no_outliers.jpg')
@@ -64,14 +62,14 @@ plt.show()
 
 # Test for normality using histograms and Q-Q plots
 # Plot histograms for the first variable to check for normality
-for i in range(1):
+for i in range(28):
     plt.hist(anonymized_var.iloc[:, i], bins=50)
     plt.legend()
     plt.savefig(f"V{str(i+1)}_hist.png")
     plt.show()
 
 # Generate Q-Q plots to compare the distributions of the first variable with a normal distribution
-for i in range(1):
+for i in range(28):
     measurements = anonymized_var.iloc[:, i]
     title = 'qqplot_V' + str(i+1) + '.jpg'
     fig = sm.qqplot(np.array(measurements), line='r')
@@ -81,7 +79,8 @@ for i in range(1):
 
 # CORRELATION ANALYSIS -----------------------------------------------------------------------------------------
 
-# Extract the variables and the target column for correlation analysis
+# Extract the variables and the target column for correlation analysis. Here, we are interested in seeing how each vraiable influences the class.
+# Hence why we select all variables as well as the class column.
 df = df.loc[:, 'V1':'Class']
 
 # Plot the correlation matrix heatmap
@@ -94,6 +93,7 @@ plt.savefig('correlation_map.png')
 plt.show()
 
 # Plot the Spearman correlation matrix heatmap
+# The Spearman correlation matrix may be more pertinent here, as the spearman correlation coefficient better captures non-linear relations.
 spearman_corr = df.corr(method="spearman")
 f, ax = plt.subplots(figsize=(18, 18))
 sns.heatmap(spearman_corr, annot=True, linewidths=0.7, fmt=".1f", ax=ax)
@@ -108,76 +108,77 @@ plt.show()
 # 2PC PCA --------------------------------------------------------------------------------------------------------------
 
 # Standardize the features
-scaler = StandardScaler()
-scaler.fit(df)
-scaled_data = scaler.transform(df)
+scaler = StandardScaler()               # Create an instance of StandardScaler to standardize the features
+scaler.fit(df)                          # Fit the scaler to the data (compute the mean and std for scaling)
+scaled_data = scaler.transform(df)      # Transform the data to have zero mean and unit variance
 
 # Perform PCA to reduce dimensions from 30 to 2
-pca = PCA(n_components=2)
-pca.fit(scaled_data)
-x_pca = pca.transform(scaled_data)
+pca = PCA(n_components=2)               # Create an instance of PCA, specifying the number of components to keep (2)
+pca.fit(scaled_data)                    # Fit the PCA model to the scaled data
+x_pca = pca.transform(scaled_data)      # Transform the scaled data into the reduced-dimensional space
 
 # Print the shapes of the original and reduced data
-print(f"shape of scaled data: {scaled_data.shape}")
-print(f"shape of x_pca: {x_pca.shape}")
+print(f"shape of scaled data: {scaled_data.shape}")  # Output the shape of the scaled data
+print(f"shape of x_pca: {x_pca.shape}")              # Output the shape of the PCA-transformed data
 
 # Print the PCA-transformed data
-print(f"here is the x_pca:\n {x_pca}")
+print(f"here is the x_pca:\n {x_pca}")        
 
 # Plot the PCA results
-principal_components = pca.components_
-plt.figure(figsize=(8, 6))
-plt.scatter(x_pca[:, 0], x_pca[:, 1], c=df['Class'], s=15, alpha=0.2)
-origin = np.zeros((2, 2))
-plt.quiver(*origin, principal_components[:, 0], principal_components[:, 1], color=['r', 'b'], scale=3)
-plt.xlabel('First Principal Component')
-plt.ylabel('Second Principal Component')
-plt.title('PCA with Principal Component Vectors')
-plt.savefig('PCA_dim2_w_vec.jpg')
-plt.show()
+principal_components = pca.components_               # Get the principal components (eigenvectors)
+plt.figure(figsize=(8, 6))                           
+plt.scatter(x_pca[:, 0], x_pca[:, 1], c=df['Class'], s=15, alpha=0.2)   # Create a scatter plot of the PCA results
+origin = np.zeros((2, 2))                                               # Create an origin point for plotting the principal components
+plt.quiver(*origin, principal_components[:, 0], principal_components[:, 1], color=['r', 'b'], scale=3)  # Plot the principal components as arrows
+plt.xlabel('First Principal Component')              
+plt.ylabel('Second Principal Component')       
+plt.title('PCA with Principal Component Vectors') 
+plt.savefig('PCA_dim2_w_vec.jpg')                 
+plt.show()         
 
 # 3PC PCA --------------------------------------------------------------------------------------------------------------
 
 # Separate features and target
-X = df.drop(columns=['Class'])
-y = df['Class']
+X = df.drop(columns=['Class'])                       # Separate the features (X) from the target variable (y)
+y = df['Class']                                      # Extract the target variable
 
 # Standardize the features
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
+scaler = StandardScaler()                            # Create a new instance of StandardScaler
+X_scaled = scaler.fit_transform(X)                   # Fit and transform the features to have zero mean and unit variance
 
 # Perform PCA to reduce dimensions to 3
-pca = PCA(n_components=3)
-X_pca = pca.fit_transform(X_scaled)
+pca = PCA(n_components=3)                            # Create an instance of PCA with 3 components
+X_pca = pca.fit_transform(X_scaled)                  # Fit the PCA model and transform the scaled features
 
 # Print explained variance ratio for each principal component
-ex_variance = np.var(X_pca, axis=0)
-ex_variance_ratio = ex_variance / np.sum(ex_variance)
+ex_variance = np.var(X_pca, axis=0)                         # Compute the variance explained by each principal component
+ex_variance_ratio = ex_variance / np.sum(ex_variance)       # Compute the explained variance ratio
 print(f'Explained variance ratio: {ex_variance_ratio}')
 
 # Prepare data for 3D plotting
-Xax = X_pca[:, 0]
-Yax = X_pca[:, 1]
-Zax = X_pca[:, 2]
+Xax = X_pca[:, 0]                                    # First PC
+Yax = X_pca[:, 1]                                    # Second PC
+Zax = X_pca[:, 2]                                    # Third PC
 
 # Define plot characteristics
-cdict = {0: 'red', 1: 'green'}
-labl = {0: 'Normal', 1: 'Fraudulent'}
-marker = {0: '*', 1: 'o'}
-alpha = {0: 0.3, 1: 0.5}
+cdict = {0: 'red', 1: 'green'}                       # Choose colors
+labl = {0: 'Normal', 1: 'Fraudulent'}                # Choose labels
+marker = {0: '*', 1: 'o'}                            # Choose markers
+alpha = {0: 0.3, 1: 0.3}                             # Choose transparency
 
 # Plot 3D scatter plot for PCA results
-fig = plt.figure(figsize=(7, 5))
-ax = fig.add_subplot(111, projection='3d')
-fig.patch.set_facecolor('white')
-for l in np.unique(y):
-    ix = np.where(y == l)
-    ax.scatter(Xax[ix], Yax[ix], Zax[ix], c=cdict[l], s=40, label=labl[l], marker=marker[l], alpha=alpha[l])
+fig = plt.figure(figsize=(7, 5))                     # Set the figure size for the plot
+ax = fig.add_subplot(111, projection='3d')           # Add a 3D subplot to the figure
+fig.patch.set_facecolor('white')                     # Set the background color of the figure
+for l in np.unique(y):                               # Loop over each class in the target variable
+    ix = np.where(y == l)                            # Get the indices for the current class
+    ax.scatter(Xax[ix], Yax[ix], Zax[ix], c=cdict[l], s=40, label=labl[l], marker=marker[l], alpha=alpha[l])  # Plot the points for the current class
 
-ax.set_xlabel("First PC", fontsize=14)
-ax.set_ylabel("Second PC", fontsize=14)
-ax.set_zlabel("Third PC", fontsize=14)
-ax.legend()
+ax.set_xlabel("First PC", fontsize=14)        
+ax.set_ylabel("Second PC", fontsize=14)      
+ax.set_zlabel("Third PC", fontsize=14)     
+ax.legend()                             
 
 plt.savefig('PCA_dim3.jpg')
 plt.show()
+
