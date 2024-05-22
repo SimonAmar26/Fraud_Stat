@@ -21,89 +21,80 @@ Exploratory Data Analysis
 
 '''
 
+# VISUALIZATION OF THE DATA -----------------------------------------------------------------------------------------
 
-# We import the csv file as a pandas DataFrame 
-
+# Load the dataset into a pandas DataFrame
 df = pd.read_csv("creditcard_2023.csv")
+
+# Display the first 5 rows of the DataFrame
 print(df.head())
+
+# Display the last 5 rows of the DataFrame
 print(df.tail())
 
-print(df['Class'].value_counts())         # the dataset is balanced between fraud cases and non-fraud cases
+# Show the distribution of the 'Class' column to check if the dataset is balanced between fraud and non-fraud cases
+print(df['Class'].value_counts())
 
-# Some metrics ------------------------------------------------------------------------------------------------------------------------
+# Display basic information about the DataFrame including column types and non-null counts
+print(df.info())
 
-# we use the descirbe method to display some information about the variables
-# however, because all the variables are anonymized, nothing salient shows up in the dataset.
+# Display summary statistics for each column
 print(df.describe())
 
-# Now for a more visual representation, let's plot the boxplot of the anonymized variables
+# Extract the anonymized variables (V1 to V28) for further analysis
 anonymized_var = df.loc[:, 'V1':'V28']
+
+# Plot boxplots for the anonymized variables to visualize their distributions and identify outliers
 plt.boxplot(anonymized_var, vert=False)
 plt.savefig('boxplot_anonymized_variables.jpg')
 plt.show()
 
-# From the previous boxplot, we saw that there were some outliers which prevented us from having a more precise vision
-
+# Remove extreme outliers for a clearer view of the data
 av_no_outliers = anonymized_var[(anonymized_var >= -50).all(axis=1) & (anonymized_var <= 50).all(axis=1)]
 plt.boxplot(av_no_outliers, vert=False)
 plt.savefig('boxplot_anonymized_variables_no_outliers.jpg')
 plt.show()
 
-# Test for normality -------------------------------------------------------------------------------------------------------------------
+# Plot histograms for each anonymized variable to analyze their distributions
+anonymized_var.hist(bins=30, figsize=(20, 15))
+plt.savefig('all_hist.jpg')
+plt.show()
 
-# Let's see with a simple histogram if some variables seem to follow a gaussian distribution
+# TEST FOR NORMALITY -----------------------------------------------------------------------------------------
+
+# Test for normality using histograms and Q-Q plots
+# Plot histograms for the first variable to check for normality
 for i in range(1):
-    plt.hist(anonymized_var.iloc[:,i], bins=50)
+    plt.hist(anonymized_var.iloc[:, i], bins=50)
     plt.legend()
     plt.savefig(f"V{str(i+1)}_hist.png")
     plt.show()
 
-
-# Now for better precision, let's use qqplots. We'll use methods from statsmodels.api
+# Generate Q-Q plots to compare the distributions of the first variable with a normal distribution
 for i in range(1):
-    measurements = anonymized_var.iloc[:,i]
+    measurements = anonymized_var.iloc[:, i]
     title = 'qqplot_V' + str(i+1) + '.jpg'
-
-    # compare with the theoretical N(0,1) quantile and a regression line is fit
-    fig = sm.qqplot(np.array(measurements), line='r') 
+    fig = sm.qqplot(np.array(measurements), line='r')
     plt.title(title)
     plt.savefig(title)
     plt.show()
 
+# CORRELATION ANALYSIS -----------------------------------------------------------------------------------------
 
-# Correlation & covariance --------------------------------------------------------------------------------------------------------------
-
-# Correlation Map --> see correlation between all 28 variables
-
+# Extract the variables and the target column for correlation analysis
 df = df.loc[:, 'V1':'Class']
 
-f, ax = plt.subplots(figsize = (18,18))
-sns.heatmap(df.corr(), annot= True, linewidths=0.7, fmt = ".1f", ax=ax)
+# Plot the correlation matrix heatmap
+f, ax = plt.subplots(figsize=(18, 18))
+sns.heatmap(df.corr(), annot=True, linewidths=0.7, fmt=".1f", ax=ax)
 plt.xticks(rotation=45)
 plt.yticks(rotation=0)
 plt.title('Correlation Map', fontsize=20)
 plt.savefig('correlation_map.png')
 plt.show()
 
-# Let's have a closer look at the correlated values
-
-print("Let's have a closer look at which variables are highly correlated")
-
-x = df.corr().values
-rows, cols = df.shape
-flds = list(df.columns)
-for i in range(cols):
-    for j in range(i+1, cols):
-        try:
-            if x[i,j] > 0.6 or x[i,j] < 0.6:
-                print (flds[i], ' ', flds[j], ' ', x[i,j])
-        except:
-            continue
-
-# Spearman correlation map (better for non-linear relationships, deals better with outliers)
-
+# Plot the Spearman correlation matrix heatmap
 spearman_corr = df.corr(method="spearman")
-
 f, ax = plt.subplots(figsize=(18, 18))
 sns.heatmap(spearman_corr, annot=True, linewidths=0.7, fmt=".1f", ax=ax)
 plt.xticks(rotation=45)
@@ -112,42 +103,40 @@ plt.title("Spearman's Correlation Map", fontsize=20)
 plt.savefig('spearman_correlation_map.png')
 plt.show()
 
+# PRINCIPAL COMPONENT ANALYSIS -----------------------------------------------------------------------------------------
 
-# Principal Component Analysis -------------------------------------------------------------------------------------------------------------
+# 2PC PCA --------------------------------------------------------------------------------------------------------------
 
-
-scaler = StandardScaler()      # why standard scaler?
+# Standardize the features
+scaler = StandardScaler()
 scaler.fit(df)
-
 scaled_data = scaler.transform(df)
 
-pca = PCA(n_components=2)     # change from 30 to 2 dimensions by changing the vector space
+# Perform PCA to reduce dimensions from 30 to 2
+pca = PCA(n_components=2)
 pca.fit(scaled_data)
-
 x_pca = pca.transform(scaled_data)
 
-print(f"shape of scaled data:{scaled_data.shape}")
-print(f"shape of x_pca:{x_pca.shape}")
+# Print the shapes of the original and reduced data
+print(f"shape of scaled data: {scaled_data.shape}")
+print(f"shape of x_pca: {x_pca.shape}")
 
+# Print the PCA-transformed data
 print(f"here is the x_pca:\n {x_pca}")
 
-# Plot
+# Plot the PCA results
 principal_components = pca.components_
-
 plt.figure(figsize=(8, 6))
-plt.scatter(x_pca[:, 0], x_pca[:, 1], c=df['Class'], s=15, alpha=0.2)    
-
+plt.scatter(x_pca[:, 0], x_pca[:, 1], c=df['Class'], s=15, alpha=0.2)
 origin = np.zeros((2, 2))
 plt.quiver(*origin, principal_components[:, 0], principal_components[:, 1], color=['r', 'b'], scale=3)
-
 plt.xlabel('First Principal Component')
 plt.ylabel('Second Principal Component')
 plt.title('PCA with Principal Component Vectors')
 plt.savefig('PCA_dim2_w_vec.jpg')
 plt.show()
 
-# --------------------------------- PCA (3 components)
-
+# 3PC PCA --------------------------------------------------------------------------------------------------------------
 
 # Separate features and target
 X = df.drop(columns=['Class'])
@@ -157,29 +146,29 @@ y = df['Class']
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
-# Perform PCA
+# Perform PCA to reduce dimensions to 3
 pca = PCA(n_components=3)
 X_pca = pca.fit_transform(X_scaled)
 
-# Explained variance ratio
+# Print explained variance ratio for each principal component
 ex_variance = np.var(X_pca, axis=0)
 ex_variance_ratio = ex_variance / np.sum(ex_variance)
 print(f'Explained variance ratio: {ex_variance_ratio}')
 
-# Prepare data for plotting
+# Prepare data for 3D plotting
 Xax = X_pca[:, 0]
 Yax = X_pca[:, 1]
 Zax = X_pca[:, 2]
 
+# Define plot characteristics
 cdict = {0: 'red', 1: 'green'}
 labl = {0: 'Normal', 1: 'Fraudulent'}
 marker = {0: '*', 1: 'o'}
 alpha = {0: 0.3, 1: 0.5}
 
-# Plot
+# Plot 3D scatter plot for PCA results
 fig = plt.figure(figsize=(7, 5))
 ax = fig.add_subplot(111, projection='3d')
-
 fig.patch.set_facecolor('white')
 for l in np.unique(y):
     ix = np.where(y == l)
@@ -192,4 +181,3 @@ ax.legend()
 
 plt.savefig('PCA_dim3.jpg')
 plt.show()
-
