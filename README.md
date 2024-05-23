@@ -4,7 +4,7 @@ The dataset can be found at: https://www.kaggle.com/datasets/nelgiriyewithana/cr
 
 Steps:
 1. Partie stat (--> EDA, Logistic Regression)
-2. Partie ML (--> Random Forest, ....)
+2. Partie ML (--> Gradient Boosting Machines, ....)
 3. Comparaison
 
 The final data science presentation is made of:
